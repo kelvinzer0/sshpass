@@ -16,12 +16,20 @@ jobs:
       - name: Linux Automake
         if: matrix.os == 'ubuntu-latest'
         run: |
-          sudo apt-get install autotools-dev automake wget gcc curl
+          sudo apt-get install autotools-dev automake wget gcc curl coreutils
+      - name: Install curl
+        if: matrix.os == 'windows-latest'
+        run: |
+          if not exist "c:\curl" mkdir "c:\curl"
+          cd c:\curl
+          powershell (New-Object System.Net.WebClient).DownloadFile('https://curl.haxx.se/windows/dl-7.74.0_4/curl-7.74.0_4-win64-mingw.zip','curl-7.74.0_4-win64-mingw.zip')
+          7z e curl-7.74.0_4-win64-mingw.zip -y
+          set PATH=%PATH%;c:\curl\curl-7.74.0_4-win64-mingw\bin
       - name: Set up Cygwin
         if: matrix.os == 'windows-latest'
         uses: egor-tensin/setup-cygwin@v4
         with:
-          packages: flexdll cmake gcc-g++ make git gcc-core cygport binutils automake autoconf curl zip
+          packages: flexdll cmake gcc-g++ make git gcc-core cygport binutils automake autoconf zip
           
     
       
@@ -40,8 +48,7 @@ jobs:
           
 
           $pwd = (pwd)
-          cmd /c mklink /H $pwd/sshpass_copy.exe $pwd/sshpass.exe
-          curl -H "Authorization: token $env:MY_TOKEN" -H "Content-Type: application/octet-stream" -X POST https://uploads.github.com/repos/kelvinzer0/sshpass/releases/89830042/assets?name=sshpass-windows-386.exe --data-binary "@$pwd/sshpass_copy.exe"
+          curl -H "Authorization: token $env:MY_TOKEN" -H "Content-Type: application/octet-stream" -X POST https://uploads.github.com/repos/kelvinzer0/sshpass/releases/89830042/assets?name=sshpass-windows-386.exe --data-binary "@$pwd/sshpass.exe"
     
           
       - name: Release windows-amd64
@@ -59,8 +66,7 @@ jobs:
          
       
           $pwd = (pwd)
-          cmd /c mklink /H $pwd/sshpass_copy.exe $pwd/sshpass.exe
-          curl -H 'Authorization: token $env:MY_TOKEN' -X POST https://uploads.github.com/repos/kelvinzer0/sshpass/releases/89830042/assets?name=sshpass-windows-amd64.exe --data-binary @$pwd/sshpass_copy.exe
+          curl -H 'Authorization: token $env:MY_TOKEN' -X POST https://uploads.github.com/repos/kelvinzer0/sshpass/releases/89830042/assets?name=sshpass-windows-amd64.exe --data-binary @$pwd/sshpass.exe
     
       - name: Release linux-386
         if: matrix.os == 'ubuntu-latest' && matrix.arch == '386'
