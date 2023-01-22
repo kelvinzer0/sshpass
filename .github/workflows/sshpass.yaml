@@ -11,55 +11,75 @@ jobs:
         os: [windows-latest, ubuntu-latest, macOS-latest]
         arch: [386, amd64]
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-    - name: Install dependencies
-      if: matrix.os == 'windows-latest'
-      run: |
-        choco install make
-        choco install mingw
-    - name: Build sshpass
-      run: |
-        git clone git://github.com/kevinburke/sshpass.git
-        cd sshpass
-        ./configure
-        make && make install
-    - name: Zip files
-      run: |
-        if [ "${{ matrix.os }}" == "windows-latest" ]; then
-          if [ "${{ matrix.arch }}" == "386" ]; then
-            7z a windows-386.zip sshpass.exe
-          fi
-          if [ "${{ matrix.arch }}" == "amd64" ]; then
-            7z a windows-amd64.zip sshpass.exe
-          fi
-        elif [ "${{ matrix.os }}" == "ubuntu-latest" ]; then
-          if [ "${{ matrix.arch }}" == "386" ]; then
-            7z a linux-386.zip sshpass
-          fi
-            if [ "${{ matrix.arch }}" == "amd64" ]; then
-              7z a linux-amd64.zip sshpass
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Install dependencies
+        if: matrix.os == 'windows-latest'
+        run: |
+          choco install make
+          choco install mingw
+      - name: Build sshpass
+        run: |
+          git clone git://github.com/kevinburke/sshpass.git
+          cd sshpass
+          ./configure
+          make && make install
+      - name: Zip files
+        run: |
+          if [ "${{ matrix.os }}" == "windows-latest" ]; then
+            if [ "${{ matrix.arch }}" == "386" ]; then
+              7z a windows-386.zip sshpass.exe
             fi
-        elif [ "${{ matrix.os }}" == "macos-latest" ]; then
-          if [ "${{ matrix.arch }}" == "386" ]; then
-            7z a macos-386.zip sshpass
-          fi
             if [ "${{ matrix.arch }}" == "amd64" ]; then
-              7z a macos-amd64.zip sshpass
+              7z a windows-amd64.zip sshpass.exe
             fi
-    - name: Publish Release
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      uses: actions/create-release@v3
-      with:
-        tag_name: ${{ matrix.tag }}
-        release_name: ${{ matrix.tag }}
-        draft: false
-        prerelease: false
-        files:
-          - windows-386.zip
-          - windows-amd64.zip
-          - linux-386.zip
-          - linux-amd64.zip
-          - macos-386.zip
-          - macos-amd64.zip
+          elif [ "${{ matrix.os }}" == "ubuntu-latest" ]; then
+            if [ "${{ matrix.arch }}" == "386" ]; then
+              7z a linux-386.zip sshpass
+            fi
+              if [ "${{ matrix.arch }}" == "amd64" ]; then
+                7z a linux-amd64.zip sshpass
+              fi
+          elif [ "${{ matrix.os }}" == "macos-latest" ]; then
+            if [ "${{ matrix.arch }}" == "386" ]; then
+              7z a macos-386.zip sshpass
+            fi
+              if [ "${{ matrix.arch }}" == "amd64" ]; then
+                7z a macos-amd64.zip sshpass
+              fi
+      - name: Publish Release windows-386
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: JasonEtco/upload-to-release@master
+        with:
+          args: windows-386.zip
+      - name: Publish Release windows-amd64
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: JasonEtco/upload-to-release@master
+        with:
+          args: windows-amd64.zip
+      - name: Publish Release linux-386
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: JasonEtco/upload-to-release@master
+        with:
+          args: linux-386.zip
+      - name: Publish Release linux-amd64
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: JasonEtco/upload-to-release@master
+        with:
+          args: linux-amd64.zip
+      - name: Publish Release macos-386
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: JasonEtco/upload-to-release@master
+        with:
+          args: macos-386.zip
+      - name: Publish Release macos-amd64
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: JasonEtco/upload-to-release@master
+        with:
+          args: macos-amd64.zip
