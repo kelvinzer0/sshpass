@@ -22,15 +22,7 @@ jobs:
         uses: egor-tensin/setup-cygwin@v4
         with:
           packages: flexdll cmake gcc-g++ make git gcc-core cygport binutils automake autoconf curl
-      - name: Build SSHPASS Windows
-        if: matrix.os == 'windows-latest'
-        run: |
-          git clone https://github.com/Edgar0119/cygwin-sshpass.git cygwin-sshpass
-          cd cygwin-sshpass
-          tar -zxvf sshpass-1.05.tar.gz
-          cd sshpass-1.05
-          bash ./configure
-          make
+          
     
       
       
@@ -39,7 +31,14 @@ jobs:
         env:
           MY_TOKEN: ${{ secrets.MY_TOKEN }}
         run: |
-          ren sshpass.exe sshpass-windows-386.exe
+          git clone https://github.com/Edgar0119/cygwin-sshpass.git cygwin-sshpass
+          cd cygwin-sshpass
+          tar -zxvf sshpass-1.05.tar.gz
+          cd sshpass-1.05
+          bash ./configure
+          make
+          
+          ren ^%cd^%/sshpass.exe ^%cd^%/sshpass-windows-386.exe
           curl -H "Authorization: token ${MY_TOKEN}" -H "Content-Type: application/octet-stream" -X POST https://uploads.github.com/repos/kelvinzer0/sshpass/releases/89830042/assets?name=sshpass-windows-386.exe --data-binary @^%cd^%/sshpass-windows-386.exe
 
       - name: Release windows-amd64
@@ -47,7 +46,14 @@ jobs:
         env:
           MY_TOKEN: ${{ secrets.MY_TOKEN }}
         run: |
-          ren sshpass.exe sshpass-windows-amd64.exe
+          git clone https://github.com/Edgar0119/cygwin-sshpass.git cygwin-sshpass
+          cd cygwin-sshpass
+          tar -zxvf sshpass-1.05.tar.gz
+          cd sshpass-1.05
+          bash ./configure
+          make
+
+          ren ^%cd^%/sshpass.exe ^%cd^%/sshpass-windows-amd64.exe
           curl -H "Authorization: token ${MY_TOKEN}" -H "Content-Type: application/octet-stream" -X POST https://uploads.github.com/repos/kelvinzer0/sshpass/releases/89830042/assets?name=sshpass-windows-amd64.exe --data-binary @^%cd^%/sshpass-windows-amd64.exe
 
       - name: Release linux-386
