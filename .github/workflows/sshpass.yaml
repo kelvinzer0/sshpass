@@ -31,14 +31,37 @@ jobs:
         env:
           MY_TOKEN: ${{ secrets.MY_TOKEN }}
         run: |
-          C:\tools\cygwin\bin\bash.exe -e -l -c "git clone https://github.com/Edgar0119/cygwin-sshpass.git cygwin-sshpass && cd cygwin-sshpass && tar -zxvf sshpass-1.05.tar.gz && cd sshpass-1.05 && bash ./configure && make && mv sshpass.exe sshpass-windows-386.exe && curl -H 'Authorization: token $env:MY_TOKEN' -H 'Content-Type: application/octet-stream' -X POST https://uploads.github.com/repos/kelvinzer0/sshpass/releases/89830042/assets?name=sshpass-windows-386.exe --data-binary @$(pwd)/sshpass-windows-386.exe"
+          git clone https://github.com/Edgar0119/cygwin-sshpass.git cygwin-sshpass
+          cd cygwin-sshpass
+          tar -zxvf sshpass-1.05.tar.gz
+          cd sshpass-1.05
+          bash ./configure
+          make
+
+  
+
+          $pwd = (pwd)
+          Get-ChildItem -Path $pwd -File -Recurse | Select-Object Name, Length
+          Rename-Item "$pwd/sshpass.exe" "$pwd/sshpass-windows-386.exe"
+          curl -H "Authorization: token $env:MY_TOKEN" -H "Content-Type: application/octet-stream" -X POST https://uploads.github.com/repos/kelvinzer0/sshpass/releases/89830042/assets?name=sshpass-windows-386.exe --data-binary "@$pwd/sshpass-windows-386.exe"
 
       - name: Release windows-amd64
         if: matrix.os == 'windows-latest' && matrix.arch == 'amd64'
         env:
           MY_TOKEN: ${{ secrets.MY_TOKEN }}
         run: |
-          C:\tools\cygwin\bin\bash.exe -e -l -c "git clone https://github.com/Edgar0119/cygwin-sshpass.git cygwin-sshpass && cd cygwin-sshpass && tar -zxvf sshpass-1.05.tar.gz && cd sshpass-1.05 && ./configure && make && mv sshpass.exe sshpass-windows-amd64.exe && curl -H 'Authorization: token $env:MY_TOKEN' -H 'Content-Type: application/octet-stream' -X POST https://uploads.github.com/repos/kelvinzer0/sshpass/releases/89830042/assets?name=sshpass-windows-amd64.exe --data-binary @$(pwd)/sshpass-windows-amd64.exe"
+          git clone https://github.com/Edgar0119/cygwin-sshpass.git cygwin-sshpass
+          cd cygwin-sshpass
+          tar -zxvf sshpass-1.05.tar.gz
+          cd sshpass-1.05
+          bash ./configure
+          make
+
+          
+          $pwd = (pwd)
+          Get-ChildItem -Path $pwd -File -Recurse | Select-Object Name, Length
+          Rename-Item "$pwd/sshpass.exe" "$pwd/sshpass-windows-amd64.exe"
+          curl -H "Authorization: token $env:MY_TOKEN" -H "Content-Type: application/octet-stream" -X POST https://uploads.github.com/repos/kelvinzer0/sshpass/releases/89830042/assets?name=sshpass-windows-amd64.exe --data-binary "@$pwd/sshpass-windows-amd64.exe"
 
       - name: Release linux-386
         if: matrix.os == 'ubuntu-latest' && matrix.arch == '386'
