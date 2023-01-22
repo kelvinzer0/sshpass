@@ -20,11 +20,7 @@ jobs:
       - name: Install curl
         if: matrix.os == 'windows-latest'
         run: |
-          if (-not (Test-Path "c:\curl")) { New-Item -ItemType Directory -Path "c:\curl" }
-          cd c:\curl
-          powershell (New-Object System.Net.WebClient).DownloadFile('https://curl.haxx.se/windows/dl-7.74.0_4/curl-7.74.0_4-win64-mingw.zip','curl-7.74.0_4-win64-mingw.zip')
-          7z e curl-7.74.0_4-win64-mingw.zip -y
-          set PATH=%PATH%;c:\curl\curl-7.74.0_4-win64-mingw\bin
+          choco install curl
       - name: Set up Cygwin
         if: matrix.os == 'windows-latest'
         uses: egor-tensin/setup-cygwin@v4
