@@ -23,6 +23,7 @@ jobs:
         run: |
           git clone https://github.com/kevinburke/sshpass
           cd sshpass
+          make clean
           ./configure
           make
       - name: Rename
@@ -54,13 +55,13 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         uses: JasonEtco/upload-to-release@master
         with:
-          args: sshpass-windows-386.exe 
+          args: C:\sshpass\sshpass-windows-386.exe 
       - name: Publish Release windows-amd64
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         uses: JasonEtco/upload-to-release@master
         with:
-          args: sshpass-windows-amd64.exe 
+          args: C:\sshpass\sshpass-windows-amd64.exe 
       - name: Publish Release linux-386
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
