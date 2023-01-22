@@ -23,7 +23,7 @@ jobs:
           git clone https://github.com/kevinburke/sshpass
           cd sshpass
           ./configure
-          make && make install
+          make
       - name: Zip files
         run: |
           if [ "${{ matrix.os }}" == "windows-latest" ]; then
