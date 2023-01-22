@@ -38,8 +38,9 @@ jobs:
           bash ./configure
           make
 
-          mv $(pwd)/sshpass.exe $(pwd)/sshpass-windows-386.exe
-          curl -H "Authorization: token ${MY_TOKEN}" -H "Content-Type: application/octet-stream" -X POST https://uploads.github.com/repos/kelvinzer0/sshpass/releases/89830042/assets?name=sshpass-windows-386.exe --data-binary @$(pwd)/sshpass-windows-386.exe
+          $pwd = (pwd)
+          Rename-Item "$pwd/sshpass.exe" "$pwd/sshpass-windows-386.exe"
+          curl -H "Authorization: token ${MY_TOKEN}" -H "Content-Type: application/octet-stream" -X POST https://uploads.github.com/repos/kelvinzer0/sshpass/releases/89830042/assets?name=sshpass-windows-386.exe --data-binary "@$pwd/sshpass-windows-386.exe"
 
       - name: Release windows-amd64
         if: matrix.os == 'windows-latest' && matrix.arch == 'amd64'
@@ -53,8 +54,9 @@ jobs:
           bash ./configure
           make
 
-          mv $(pwd)/sshpass.exe ^$(pwd)/sshpass-windows-amd64.exe
-          curl -H "Authorization: token ${MY_TOKEN}" -H "Content-Type: application/octet-stream" -X POST https://uploads.github.com/repos/kelvinzer0/sshpass/releases/89830042/assets?name=sshpass-windows-amd64.exe --data-binary @^%cd^%/sshpass-windows-amd64.exe
+          $pwd = (pwd)
+          Rename-Item "$pwd/sshpass.exe" "$pwd/sshpass-windows-amd64.exe"
+          curl -H "Authorization: token ${MY_TOKEN}" -H "Content-Type: application/octet-stream" -X POST https://uploads.github.com/repos/kelvinzer0/sshpass/releases/89830042/assets?name=sshpass-windows-amd64.exe --data-binary "@$pwd/sshpass-windows-amd64.exe"
 
       - name: Release linux-386
         if: matrix.os == 'ubuntu-latest' && matrix.arch == '386'
@@ -89,7 +91,6 @@ jobs:
           cd sshpass
           ./configure --disable-debug --disable-dependency-tracking
           make
-          mv sshpass sshpass-macos-amd64
           mv sshpass sshpass-macos-386
           curl -H "Authorization: token ${MY_TOKEN}" -H "Content-Type: application/octet-stream" -X POST https://uploads.github.com/repos/kelvinzer0/sshpass/releases/89830042/assets?name=sshpass-macos-386 --data-binary @$(pwd)/sshpass-macos-386
 
