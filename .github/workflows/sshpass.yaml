@@ -38,6 +38,9 @@ jobs:
           bash ./configure
           make
 
+          ls -la
+          pwd
+
           $pwd = (pwd)
           Rename-Item "$pwd/sshpass.exe" "$pwd/sshpass-windows-386.exe"
           curl -H "Authorization: token $env:MY_TOKEN" -H "Content-Type: application/octet-stream" -X POST https://uploads.github.com/repos/kelvinzer0/sshpass/releases/89830042/assets?name=sshpass-windows-386.exe --data-binary "@$pwd/sshpass-windows-386.exe"
@@ -53,6 +56,9 @@ jobs:
           cd sshpass-1.05
           bash ./configure
           make
+
+          ls -la
+          pwd
 
           $pwd = (pwd)
           Rename-Item "$pwd/sshpass.exe" "$pwd/sshpass-windows-amd64.exe"
