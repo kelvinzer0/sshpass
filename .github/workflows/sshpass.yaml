@@ -18,31 +18,10 @@ jobs:
         run: |
           sudo apt-get install autotools-dev automake wget gcc
       - name: Set up Cygwin
-        if: matrix.os == 'windows-latest' && matrix.arch == 'amd64'
-        uses: egor-tensin/setup-cygwin@v3
+        if: matrix.os == 'windows-latest'
+        uses: egor-tensin/setup-cygwin@v4
         with:
-          platform: x64
-          packages: wget
-      - name: Set up Cygwin
-        if: matrix.os == 'windows-latest' && matrix.arch == '386'
-        uses: egor-tensin/setup-cygwin@v3
-        with:
-          platform: x86
-          packages: wget
-      - name: test
-        if: matrix.os == 'windows-latest'
-        run: |
-          pwd
-      - name: Install apt-cyg 
-        if: matrix.os == 'windows-latest'
-        run: |
-          wget rawgit.com/transcode-open/apt-cyg/master/apt-cyg -O apt-cyg
-          install apt-cyg /bin
-      - name: Install libs
-        if: matrix.os == 'windows-latest'
-        run: |
-          apt-cyg install gcc-core flexdll binutils cmake gcc-g++ automake autoconf libtool python flex bison coreutils opam  cpio  libiconv libiconv-devel gettext  po4a ncurses   ninja genisoimage   byacc libncurses-devel git mingw64-x86_64-gettext lynx gperf  gettext-devel libreadline-devel  findutils-debuginfo wget libxml2-devel python3-devel file-devel libxml2-devel libtirpc-devel libjansson-devel pcre2 libpcre2-devel ocaml-findlib
-
+          packages: flexdll cmake gcc-g++ make git gcc-core cygport binutils automake autoconf
       - name: Build SSHPASS Windows
         if: matrix.os == 'windows-latest'
         run: |
@@ -52,6 +31,7 @@ jobs:
           cd sshpass-1.05
           bash ./configure
           make
+          ls
       - name: Build sshpass
         if: matrix.os != 'windows-latest'
         run: |
@@ -59,6 +39,8 @@ jobs:
           cd sshpass
           ./configure --disable-debug --disable-dependency-tracking
           make
+          ls
+          pwd
       - name: Rename
         run: |
           if [ "${{ matrix.os }}" == "windows-latest" ]; then
