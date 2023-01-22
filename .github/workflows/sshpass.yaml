@@ -28,58 +28,58 @@ jobs:
         run: |
           if [ "${{ matrix.os }}" == "windows-latest" ]; then
             if [ "${{ matrix.arch }}" == "386" ]; then
-              7z a windows-386.zip sshpass.exe
+              ren sshpass.exe sshpass-windows-386.exe 
             fi
             if [ "${{ matrix.arch }}" == "amd64" ]; then
-              7z a windows-amd64.zip sshpass.exe
+              ren sshpass.exe sshpass-windows-amd64.exe
             fi
           elif [ "${{ matrix.os }}" == "ubuntu-latest" ]; then
             if [ "${{ matrix.arch }}" == "386" ]; then
-              7z a linux-386.zip sshpass
+              mv sshpass sshpass-linux-386
             fi
-              if [ "${{ matrix.arch }}" == "amd64" ]; then
-                7z a linux-amd64.zip sshpass
-              fi
+            if [ "${{ matrix.arch }}" == "amd64" ]; then
+              mv sshpass sshpass-linux-amd64
+            fi
           elif [ "${{ matrix.os }}" == "macos-latest" ]; then
             if [ "${{ matrix.arch }}" == "386" ]; then
-              7z a macos-386.zip sshpass
+              mv sshpass sshpass-darwin-386
             fi
-              if [ "${{ matrix.arch }}" == "amd64" ]; then
-                7z a macos-amd64.zip sshpass
-              fi
+            if [ "${{ matrix.arch }}" == "amd64" ]; then
+               mv sshpass sshpass-darwin-amd64
+            fi
       - name: Publish Release windows-386
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         uses: JasonEtco/upload-to-release@master
         with:
-          args: windows-386.zip
+          args: sshpass-windows-386.exe 
       - name: Publish Release windows-amd64
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         uses: JasonEtco/upload-to-release@master
         with:
-          args: windows-amd64.zip
+          args: sshpass-windows-amd64.exe 
       - name: Publish Release linux-386
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         uses: JasonEtco/upload-to-release@master
         with:
-          args: linux-386.zip
+          args: sshpass-linux-386
       - name: Publish Release linux-amd64
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         uses: JasonEtco/upload-to-release@master
         with:
-          args: linux-amd64.zip
+          args: sshpass-linux-amd64
       - name: Publish Release macos-386
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         uses: JasonEtco/upload-to-release@master
         with:
-          args: macos-386.zip
+          args: sshpass-darwin-386
       - name: Publish Release macos-amd64
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         uses: JasonEtco/upload-to-release@master
         with:
-          args: macos-amd64.zip
+          args: sshpass-darwin-amd64
