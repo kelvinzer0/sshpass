@@ -43,7 +43,7 @@ jobs:
           pwd
       
       - name: Release windows-386
-        if: matrix.os == "windows-latest" && matrix.arch == "386"
+        if: matrix.os == 'windows-latest' && matrix.arch == '386'
         env:
           MY_TOKEN: ${{ secrets.MY_TOKEN }}
         run: |
@@ -51,7 +51,7 @@ jobs:
           curl -H "Authorization: token ${MY_TOKEN}" -H "Content-Type: application/octet-stream" -X POST https://api.github.com/repos/kelvinzer0/sshpass/releases/89830042/assets?name=sshpass-windows-386.exe --data-binary @sshpass-windows-386.exe
 
       - name: Release windows-amd64
-        if: matrix.os == "windows-latest" && matrix.arch == "amd64"
+        if: matrix.os == 'windows-latest' && matrix.arch == 'amd64'
         env:
           MY_TOKEN: ${{ secrets.MY_TOKEN }}
         run: |
@@ -59,36 +59,33 @@ jobs:
           curl -H "Authorization: token ${MY_TOKEN}" -H "Content-Type: application/octet-stream" -X POST https://api.github.com/repos/kelvinzer0/sshpass/releases/89830042/assets?name=sshpass-windows-amd64.exe --data-binary @sshpass-windows-amd64.exe
 
       - name: Release linux-386
-        if: matrix.os == "ubuntu-latest" && matrix.arch == "386"
+        if: matrix.os == 'ubuntu-latest' && matrix.arch == '386'
         env:
           MY_TOKEN: ${{ secrets.MY_TOKEN }}
         run: |
-          ren sshpass sshpass-linux-386
+          mv sshpass sshpass-linux-386
           curl -H "Authorization: token ${MY_TOKEN}" -H "Content-Type: application/octet-stream" -X POST https://api.github.com/repos/kelvinzer0/sshpass/releases/89830042/assets?name=sshpass-linux-386 --data-binary @sshpass-linux-386
 
       - name: Release linux-amd64
-        if: matrix.os == "ubuntu-latest" && matrix.arch == "amd64"
+        if: matrix.os == 'ubuntu-latest' && matrix.arch == 'amd64'
         env:
           MY_TOKEN: ${{ secrets.MY_TOKEN }}
         run: |
-          ren sshpass sshpass-linux-amd64
+          mv sshpass sshpass-linux-amd64
           curl -H "Authorization: token ${MY_TOKEN}" -H "Content-Type: application/octet-stream" -X POST https://api.github.com/repos/kelvinzer0/sshpass/releases/89830042/assets?name=sshpass-linux-amd64 --data-binary @sshpass-linux-amd64
 
       - name: Release macos-386
-        if: matrix.os == "macos-latest" && matrix.arch == "386"
+        if: matrix.os == 'macos-latest' && matrix.arch == '386'
         env:
           MY_TOKEN: ${{ secrets.MY_TOKEN }}
         run: |
-          ren sshpass sshpass-macos-386
+          mv sshpass sshpass-macos-386
           curl -H "Authorization: token ${MY_TOKEN}" -H "Content-Type: application/octet-stream" -X POST https://api.github.com/repos/kelvinzer0/sshpass/releases/89830042/assets?name=sshpass-macos-386 --data-binary @sshpass-macos-386
 
       - name: Release macos-amd64
-        if: matrix.os == "macos-latest" && matrix.arch == "amd64"
+        if: matrix.os == 'macos-latest' && matrix.arch == 'amd64'
         env:
           MY_TOKEN: ${{ secrets.MY_TOKEN }}
         run: |
-          ren sshpass sshpass-macos-amd64
+          mv sshpass sshpass-macos-amd64
           curl -H "Authorization: token ${MY_TOKEN}" -H "Content-Type: application/octet-stream" -X POST https://api.github.com/repos/kelvinzer0/sshpass/releases/89830042/assets?name=sshpass-macos-amd64 --data-binary @sshpass-macos-amd64
-
-
-  
