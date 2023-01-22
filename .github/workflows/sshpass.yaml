@@ -16,7 +16,7 @@ jobs:
       - name: Linux Automake
         if: matrix.os == 'ubuntu-latest'
         run: |
-          sudo apt-get install automake
+          apt-get install automake
       - name: Install dependencies
         if: matrix.os == 'windows-latest'
         run: |
