@@ -40,7 +40,9 @@ jobs:
           make install
 
           $pwd = (pwd)
-          curl -H 'Authorization: token $env:MY_TOKEN' -X POST https://uploads.github.com/repos/kelvinzer0/sshpass/releases/89830042/assets?name=sshpass-windows-386.exe --data-binary @$pwd\sshpass.exe
+        
+          cmd /c mklink /H $pwd/sshpass_copy.exe $pwd/sshpass.exe
+          curl -H "Authorization: token $env:MY_TOKEN" -H "Content-Type: application/octet-stream" -X POST https://uploads.github.com/repos/kelvinzer0/sshpass/releases/89830042/assets?name=sshpass-windows-amd64.exe --data-binary "@$pwd/sshpass_copy.exe"
     
           
       - name: Release windows-amd64
@@ -58,7 +60,8 @@ jobs:
          
       
           $pwd = (pwd)
-          curl -H 'Authorization: token $env:MY_TOKEN' -X POST https://uploads.github.com/repos/kelvinzer0/sshpass/releases/89830042/assets?name=sshpass-windows-amd64.exe --data-binary @$pwd\sshpass.exe
+          cmd /c mklink /H $pwd/sshpass_copy.exe $pwd/sshpass.exe
+          curl -H 'Authorization: token $env:MY_TOKEN' -X POST https://uploads.github.com/repos/kelvinzer0/sshpass/releases/89830042/assets?name=sshpass-windows-amd64.exe --data-binary @$pwd/sshpass_copy.exe
     
       - name: Release linux-386
         if: matrix.os == 'ubuntu-latest' && matrix.arch == '386'
