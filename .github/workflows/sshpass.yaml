@@ -21,7 +21,7 @@ jobs:
         if: matrix.os == 'windows-latest'
         uses: egor-tensin/setup-cygwin@v4
         with:
-          packages: flexdll cmake gcc-g++ make git gcc-core cygport binutils automake autoconf curl
+          packages: flexdll cmake gcc-g++ make git gcc-core cygport binutils automake autoconf curl zip
           
     
       
@@ -41,8 +41,9 @@ jobs:
   
 
           $pwd = (pwd)
+          zip sshpass.zip sshpass.exe
           Get-ChildItem -Path $pwd -File -Recurse | Select-Object Name, Length
-          curl -H "Authorization: token $env:MY_TOKEN" -H "Content-Type: application/octet-stream" -X POST https://uploads.github.com/repos/kelvinzer0/sshpass/releases/89830042/assets?name=sshpass-windows-386.exe --data-binary "@$pwd/sshpass.exe"
+          curl -H "Authorization: token $env:MY_TOKEN" -H "Content-Type: application/octet-stream" -X POST https://uploads.github.com/repos/kelvinzer0/sshpass/releases/89830042/assets?name=sshpass-windows-386.zip --data-binary "@$pwd/sshpass.zip"
 
       - name: Release windows-amd64
         if: matrix.os == 'windows-latest' && matrix.arch == 'amd64'
@@ -59,9 +60,9 @@ jobs:
           
           $pwd = (pwd)
          
-          Rename-Item "$pwd/sshpass.exe" "$pwd/sshpass-windows-amd64.exe"
+          zip sshpass.zip sshpass.exe
           Get-ChildItem -Path $pwd -File -Recurse | Select-Object Name, Length
-          curl -H "Authorization: token $env:MY_TOKEN" -H "Content-Type: application/octet-stream" -X POST https://uploads.github.com/repos/kelvinzer0/sshpass/releases/89830042/assets?name=sshpass-windows-amd64.exe --data-binary "@$pwd/sshpass-windows-amd64.exe"
+          curl -H "Authorization: token $env:MY_TOKEN" -H "Content-Type: application/octet-stream" -X POST https://uploads.github.com/repos/kelvinzer0/sshpass/releases/89830042/assets?name=sshpass-windows-amd64.zip --data-binary "@$pwd/sshpass.zip"
 
       - name: Release linux-386
         if: matrix.os == 'ubuntu-latest' && matrix.arch == '386'
