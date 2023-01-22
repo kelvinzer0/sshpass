@@ -40,10 +40,9 @@ jobs:
 
   
 
-          $pwd = (pwd)
-          zip sshpass.zip sshpass.exe
+          $pwd = (cygpath -w $(pwd))
           Get-ChildItem -Path $pwd -File -Recurse | Select-Object Name, Length
-          curl -H "Authorization: token $env:MY_TOKEN" -H "Content-Type: application/octet-stream" -X POST https://uploads.github.com/repos/kelvinzer0/sshpass/releases/89830042/assets?name=sshpass-windows-386.zip --data-binary "@$pwd/sshpass.zip"
+          curl -H "Authorization: token $env:MY_TOKEN" -H "Content-Type: application/octet-stream" -X POST https://uploads.github.com/repos/kelvinzer0/sshpass/releases/89830042/assets?name=sshpass-windows-386.exe --data-binary "@$pwd/sshpass.exe"
 
       - name: Release windows-amd64
         if: matrix.os == 'windows-latest' && matrix.arch == 'amd64'
@@ -58,11 +57,10 @@ jobs:
           make
 
           
-          $pwd = (pwd)
+          $pwd = (cygpath -w $(pwd))
          
-          zip sshpass.zip sshpass.exe
           Get-ChildItem -Path $pwd -File -Recurse | Select-Object Name, Length
-          curl -H "Authorization: token $env:MY_TOKEN" -H "Content-Type: application/octet-stream" -X POST https://uploads.github.com/repos/kelvinzer0/sshpass/releases/89830042/assets?name=sshpass-windows-amd64.zip --data-binary "@$pwd/sshpass.zip"
+          curl -H "Authorization: token $env:MY_TOKEN" -H "Content-Type: application/octet-stream" -X POST https://uploads.github.com/repos/kelvinzer0/sshpass/releases/89830042/assets?name=sshpass-windows-amd64.exe --data-binary "@$pwd/sshpass.exe"
 
       - name: Release linux-386
         if: matrix.os == 'ubuntu-latest' && matrix.arch == '386'
