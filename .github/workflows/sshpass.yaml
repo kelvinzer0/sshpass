@@ -18,13 +18,14 @@ jobs:
         run: |
           choco install make
           choco install mingw
+          cd C:\
       - name: Build sshpass
         run: |
           git clone https://github.com/kevinburke/sshpass
           cd sshpass
           ./configure
           make
-      - name: Zip files
+      - name: Rename
         run: |
           if [ "${{ matrix.os }}" == "windows-latest" ]; then
             if [ "${{ matrix.arch }}" == "386" ]; then
