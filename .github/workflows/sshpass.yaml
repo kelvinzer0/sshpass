@@ -17,14 +17,47 @@ jobs:
         if: matrix.os == 'ubuntu-latest'
         run: |
           sudo apt-get install autotools-dev automake wget gcc
-
-      - name: Install dependencies
+      - name: Msgmerge fix
+        shell: pwsh 
+        run: |
+          Remove-Item "C:\Program Files\Git\usr\bin\msgmerge.exe"
+      - name: Set up Cygwin
+        if: matrix.os == 'windows-latest' && matrix.arch == 'amd64'
+        uses: egor-tensin/setup-cygwin@v3
+        with:
+          platform: x64
+          packages: wget
+      - name: Set up Cygwin
+        if: matrix.os == 'windows-latest' && matrix.arch == '386'
+        uses: egor-tensin/setup-cygwin@v3
+        with:
+          platform: x86
+          packages: wget
+      - name: test
         if: matrix.os == 'windows-latest'
         run: |
-          choco install cygwin
-          cygwin-setup -q -P wget,make,gcc
-          cd C:\
+          pwd
+      - name: Install apt-cyg 
+        if: matrix.os == 'windows-latest'
+        run: |
+          wget rawgit.com/transcode-open/apt-cyg/master/apt-cyg -O apt-cyg
+          install apt-cyg /bin
+      - name: Install libs
+        if: matrix.os == 'windows-latest'
+        run: |
+          apt-cyg install gcc-core flexdll binutils cmake gcc-g++ automake autoconf libtool python flex bison coreutils opam  cpio  libiconv libiconv-devel gettext  po4a ncurses   ninja genisoimage   byacc libncurses-devel git mingw64-x86_64-gettext lynx gperf  gettext-devel libreadline-devel  findutils-debuginfo wget libxml2-devel python3-devel file-devel libxml2-devel libtirpc-devel libjansson-devel pcre2 libpcre2-devel ocaml-findlib
+
+      - name: Build SSHPASS Windows
+        if: matrix.os == 'windows-latest'
+        run: |
+          git clone https://github.com/Edgar0119/cygwin-sshpass.git cygwin-sshpass
+          cd cygwin-sshpass
+          tar -zxvf sshpass-1.05.tar.gz
+          cd sshpass-1.05
+          bash ./configure
+          make
       - name: Build sshpass
+        if: matrix.os != 'windows-latest'
         run: |
           git clone https://github.com/kevinburke/sshpass
           cd sshpass
@@ -60,14 +93,14 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         uses: JasonEtco/upload-to-release@master
         with:
-          args: C:\sshpass\sshpass-windows-386.exe 
+          args: C:\cygwin-sshpass\sshpass-windows-386.exe 
       - name: Publish Release windows-amd64
         if: matrix.os == 'windows-latest' && matrix.arch == 'amd64'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         uses: JasonEtco/upload-to-release@master
         with:
-          args: C:\sshpass\sshpass-windows-amd64.exe 
+          args: C:\cygwin-sshpass\sshpass-windows-amd64.exe 
       - name: Publish Release linux-386 && matrix.arch == '386'
         if: matrix.os == 'linux-latest'
         env:
