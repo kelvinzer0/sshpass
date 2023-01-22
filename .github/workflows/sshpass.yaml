@@ -37,8 +37,9 @@ jobs:
           cd sshpass-1.05
           bash ./configure
           make
+          make install
 
-          C:\tools\cygwin\bin\bash.exe -e -l -c "curl -H 'Authorization: token $env:MY_TOKEN' -H 'Content-Type: application/octet-stream' -X POST https://uploads.github.com/repos/kelvinzer0/sshpass/releases/89830042/assets?name=sshpass-windows-386.exe --data-binary @/cygdrive/d/a/sshpass/sshpass/cygwin-sshpass/sshpass.exe"
+          C:\tools\cygwin\bin\bash.exe -e -l -c "curl -H 'Authorization: token $env:MY_TOKEN' -H 'Content-Type: application/octet-stream' -X POST https://uploads.github.com/repos/kelvinzer0/sshpass/releases/89830042/assets?name=sshpass-windows-386.exe --data-binary @C:\cygwin\bin\sshpass.exe"
     
           
       - name: Release windows-amd64
@@ -52,9 +53,10 @@ jobs:
           cd sshpass-1.05
           bash ./configure
           make
+          make install
          
       
-          C:\tools\cygwin\bin\bash.exe -e -l -c "curl -H 'Authorization: token $env:MY_TOKEN' -H 'Content-Type: application/octet-stream' -X POST https://uploads.github.com/repos/kelvinzer0/sshpass/releases/89830042/assets?name=sshpass-windows-amd64.exe --data-binary @/cygdrive/d/a/sshpass/sshpass/cygwin-sshpass/sshpass.exe"
+          C:\tools\cygwin\bin\bash.exe -e -l -c "curl -H 'Authorization: token $env:MY_TOKEN' -H 'Content-Type: application/octet-stream' -X POST https://uploads.github.com/repos/kelvinzer0/sshpass/releases/89830042/assets?name=sshpass-windows-amd64.exe --data-binary @C:\cygwin\bin\sshpass.exe"
     
       - name: Release linux-386
         if: matrix.os == 'ubuntu-latest' && matrix.arch == '386'
