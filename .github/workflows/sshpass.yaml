@@ -16,12 +16,12 @@ jobs:
       - name: Linux Automake
         if: matrix.os == 'ubuntu-latest'
         run: |
-          sudo apt-get install autotools-dev automake wget gcc
+          sudo apt-get install autotools-dev automake wget gcc curl
       - name: Set up Cygwin
         if: matrix.os == 'windows-latest'
         uses: egor-tensin/setup-cygwin@v4
         with:
-          packages: flexdll cmake gcc-g++ make git gcc-core cygport binutils automake autoconf
+          packages: flexdll cmake gcc-g++ make git gcc-core cygport binutils automake autoconf curl
       - name: Build SSHPASS Windows
         if: matrix.os == 'windows-latest'
         run: |
@@ -41,69 +41,54 @@ jobs:
           make
           ls
           pwd
-      - name: Rename
+      
+      - name: Release windows-386
+        if: matrix.os == "windows-latest" && matrix.arch == "386"
+        env:
+          MY_TOKEN: ${{ secrets.MY_TOKEN }}
         run: |
-          if [ "${{ matrix.os }}" == "windows-latest" ]; then
-            if [ "${{ matrix.arch }}" == "386" ]; then
-              ren sshpass.exe sshpass-windows-386.exe 
-            fi
-            if [ "${{ matrix.arch }}" == "amd64" ]; then
-              ren sshpass.exe sshpass-windows-amd64.exe
-            fi
-          elif [ "${{ matrix.os }}" == "ubuntu-latest" ]; then
-            if [ "${{ matrix.arch }}" == "386" ]; then
-              mv sshpass sshpass-linux-386
-            fi
-            if [ "${{ matrix.arch }}" == "amd64" ]; then
-              mv sshpass sshpass-linux-amd64
-            fi
-          elif [ "${{ matrix.os }}" == "macos-latest" ]; then
-            if [ "${{ matrix.arch }}" == "386" ]; then
-              mv sshpass sshpass-darwin-386
-            fi
-            if [ "${{ matrix.arch }}" == "amd64" ]; then
-               mv sshpass sshpass-darwin-amd64
-            fi
-          fi
-      - name: Publish Release windows-386
-        if: matrix.os == 'windows-latest' && matrix.arch == '386'
+          ren sshpass.exe sshpass-windows-386.exe
+          curl -H "Authorization: token ${MY_TOKEN}" -H "Content-Type: application/octet-stream" -X POST https://api.github.com/repos/kelvinzer0/sshpass/releases/89830042/assets?name=sshpass-windows-386.exe --data-binary @sshpass-windows-386.exe
+
+      - name: Release windows-amd64
+        if: matrix.os == "windows-latest" && matrix.arch == "amd64"
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        uses: JasonEtco/upload-to-release@master
-        with:
-          args: C:\cygwin-sshpass\sshpass-windows-386.exe 
-      - name: Publish Release windows-amd64
-        if: matrix.os == 'windows-latest' && matrix.arch == 'amd64'
+          MY_TOKEN: ${{ secrets.MY_TOKEN }}
+        run: |
+          ren sshpass.exe sshpass-windows-amd64.exe
+          curl -H "Authorization: token ${MY_TOKEN}" -H "Content-Type: application/octet-stream" -X POST https://api.github.com/repos/kelvinzer0/sshpass/releases/89830042/assets?name=sshpass-windows-amd64.exe --data-binary @sshpass-windows-amd64.exe
+
+      - name: Release linux-386
+        if: matrix.os == "ubuntu-latest" && matrix.arch == "386"
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        uses: JasonEtco/upload-to-release@master
-        with:
-          args: C:\cygwin-sshpass\sshpass-windows-amd64.exe 
-      - name: Publish Release linux-386 && matrix.arch == '386'
-        if: matrix.os == 'linux-latest'
+          MY_TOKEN: ${{ secrets.MY_TOKEN }}
+        run: |
+          ren sshpass sshpass-linux-386
+          curl -H "Authorization: token ${MY_TOKEN}" -H "Content-Type: application/octet-stream" -X POST https://api.github.com/repos/kelvinzer0/sshpass/releases/89830042/assets?name=sshpass-linux-386 --data-binary @sshpass-linux-386
+
+      - name: Release linux-amd64
+        if: matrix.os == "ubuntu-latest" && matrix.arch == "amd64"
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        uses: JasonEtco/upload-to-release@master
-        with:
-          args: sshpass-linux-386
-      - name: Publish Release linux-amd64
-        if: matrix.os == 'linux-latest' && matrix.arch == 'amd64'
+          MY_TOKEN: ${{ secrets.MY_TOKEN }}
+        run: |
+          ren sshpass sshpass-linux-amd64
+          curl -H "Authorization: token ${MY_TOKEN}" -H "Content-Type: application/octet-stream" -X POST https://api.github.com/repos/kelvinzer0/sshpass/releases/89830042/assets?name=sshpass-linux-amd64 --data-binary @sshpass-linux-amd64
+
+      - name: Release macos-386
+        if: matrix.os == "macos-latest" && matrix.arch == "386"
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        uses: JasonEtco/upload-to-release@master
-        with:
-          args: sshpass-linux-amd64
-      - name: Publish Release macos-386 
-        if: matrix.os == 'macos-latest' && matrix.arch == '386'
+          MY_TOKEN: ${{ secrets.MY_TOKEN }}
+        run: |
+          ren sshpass sshpass-macos-386
+          curl -H "Authorization: token ${MY_TOKEN}" -H "Content-Type: application/octet-stream" -X POST https://api.github.com/repos/kelvinzer0/sshpass/releases/89830042/assets?name=sshpass-macos-386 --data-binary @sshpass-macos-386
+
+      - name: Release macos-amd64
+        if: matrix.os == "macos-latest" && matrix.arch == "amd64"
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        uses: JasonEtco/upload-to-release@master
-        with:
-          args: sshpass-darwin-386
-      - name: Publish Release macos-amd64
-        if: matrix.os == 'macos-latest' && matrix.arch == 'amd64'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        uses: JasonEtco/upload-to-release@master
-        with:
-          args: sshpass-darwin-amd64
+          MY_TOKEN: ${{ secrets.MY_TOKEN }}
+        run: |
+          ren sshpass sshpass-macos-amd64
+          curl -H "Authorization: token ${MY_TOKEN}" -H "Content-Type: application/octet-stream" -X POST https://api.github.com/repos/kelvinzer0/sshpass/releases/89830042/assets?name=sshpass-macos-amd64 --data-binary @sshpass-macos-amd64
+
+
+  
